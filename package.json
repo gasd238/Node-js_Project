@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/gasd238/Node-js_Project#readme",
   "dependencies": {
+    "ejs": "^2.6.1",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
+    "pug": "^2.0.3",
     "sqlite3": "^4.0.8"
   }
 }
