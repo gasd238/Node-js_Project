@@ -5,6 +5,6 @@ var userSchema = new Schema({
     password: String, 
     name: String, 
     grade: String
-}, { collection: 'userinfo' }); 
+}); 
 
 module.exports = mongoose.model('user', userSchema);

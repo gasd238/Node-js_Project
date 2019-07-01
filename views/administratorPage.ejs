@@ -39,12 +39,18 @@
     <a class="p-2 text-dark" href="bannap">반납</a>
   <a class="p-2 text-dark" href="myPage">마이페이지</a>
 </nav>
-<a class="btn btn-outline-primary" href="/signUp">Sign up</a>
+<% if(islogin == 'logout') { %>
+  <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
+  <% } %>
+  <% if(islogin == 'login') { %>
+    <a class="btn btn-outline-primary" href="/logOut">Log Out</a>
+  <% } %>
 </div>
 
 <main role="main" class="container">
 
   <div class="starter-template">
+    <h1>Bootstrap starter template</h1>
     <br><br><br>
     <h2>대출을 원하시는 책의 코드를 입력하세요</h2>
     <br><hr><br>

@@ -1,5 +1,3 @@
-
-<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -31,7 +29,6 @@
         }
       }
     </style>
-    <!-- Custom styles for this template -->
   </head>
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -42,41 +39,29 @@
     <a class="p-2 text-dark" href="bannap">반납</a>
   <a class="p-2 text-dark" href="myPage">마이페이지</a>
 </nav>
-<a class="btn btn-outline-primary" href="/signIn">Sign In</a>
+<% if(islogin == 'logout') { %>
+  <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
+  <% } %>
+  <% if(islogin == 'login') { %>
+    <a class="btn btn-outline-primary" href="/logOut">Log Out</a>
+  <% } %>
 </div>
 
 <main role="main" class="container">
 
   <div class="starter-template">
-    <br><br><br><h2>My Page</h2><br><hr>
-    <br><br>
-    <div class="media">
-  <img src="/profile.png" class="mr-3" alt="앙큼면상">
-  <div class="media-body">
-    <h5 class="mt-0"><b>이름:</b> 정민아</h5>
-    <ul>
-      <li>광주소프트웨어마이스터고 - <b>n학년 n반 n번</b></li>
-      <li>대출 가능 여부 : <b>O</b><br></li>
-  </ul>
+    <br><br><br>
+    <h2>대출을 원하시는 책의 코드를 입력하세요</h2>
+    <br><hr><br>
+    <form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Book Code</label>
+    <input class="form-control" type="text" placeholder="Default input">
+    <small id="emailHelp" class="form-text text-muted">코드는 표지 혹은 속표지에 주로 위치해있습니다.</small>
   </div>
-</div><br><br><br>
-
-  <h2>현재 대출중인 도서 목록</h2>
-  <ul class="list-group">
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    젊은 예술가의 초상(KM33110030)
-    <span class="badge badge-primary badge-pill">14</span>
-  </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    달콤 쌉싸름한 초콜릿(KM23293203)
-    <span class="badge badge-primary badge-pill">2</span>
-  </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    자본주의, 사회주의, 민주주의(KM012301282)
-    <span class="badge badge-primary badge-pill">1</span>
-  </li>
-</ul>
-
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
 
 </main><!-- /.container -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
