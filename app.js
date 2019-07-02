@@ -59,7 +59,7 @@ app.get('/daechul', function(req, res){
 });
 
 app.get('/myPage', function(req, res){
-    res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok});
+    res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: req.session.bookli});
 });
 
 app.get('/admin', function(req, res){
@@ -82,6 +82,7 @@ app.post('/signIn/check', function(req, res, next) {
 			req.session.grade = member[0].grade;
 			req.session.number = member[0].number;
 			req.session.isok = member[0].isok;
+			req.session.bookli = member[0].bookli;
             res.status(200);
 		    res.redirect('/');
 		} else{
@@ -95,6 +96,7 @@ app.get('/logOut', function(req, res){
 	req.session.grade = 'undefined';
 	req.session.number = NaN;
 	req.session.isok = '?'
+	req.session.bookli = {}
     res.status(200);
     res.redirect('/');
 });
@@ -110,7 +112,7 @@ app.post('/signUp/check',function(req, res) {
 	  		if (err) return handleError(err);
 	  		
 	  		if(!member.length) {
-				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name, number: req.body.num, grade: 'member'});
+				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name, number: req.body.num, grade: 'member', isok: 'O', bookli: {}});
 				myMember.save(function (err, data) {
 					if (err) {
 						console.log("error");
