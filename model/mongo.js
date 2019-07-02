@@ -7,7 +7,12 @@ var userSchema = new Schema({
     grade: String,
     number: Number ,
     isok : String,
-    bookli: Array
+    bookli: {
+        bookinfo : {
+            bookname: [],
+            leftdays: []
+        }
+    }
 }); 
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('userinfo', userSchema);

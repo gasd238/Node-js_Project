@@ -2,7 +2,7 @@ var express = require('express')
 var url = require('url')
 var app = express()
 var logger = require('morgan')
-var user = require('./model/mongo');
+var userinfo = require('./model/mongo');
 var session = require('express-session');
 var favicon = require('serve-favicon')
 
@@ -47,7 +47,7 @@ app.get('/', function(req, res){
 }); 
 
 app.get('/signIn', function(req, res){
-    res.render('signIn', {islogin: req.session.login, grade: req.session.grade});
+    res.render('signIn');
 });
 
 app.get('/bannap', function(req, res){
@@ -70,8 +70,12 @@ app.get('/wrong', function(req, res){
 	res.render('wrong')
 })
 
-app.post('/signUp', function (req, res, next) {
+app.get('/wrong2', function(req, res){
+	res.render('wrongID')
+})
 
+app.get('/signUp', function (req, res, next) {
+	res.render('signUp');
 });
 
 app.post('/signIn/check', function(req, res, next) { 
@@ -102,29 +106,23 @@ app.get('/logOut', function(req, res){
 });
 
 app.post('/signUp/check',function(req, res) {
-
-	var curUsername = req.body.id;
-	if(curUsername == undefined) {
-		res.redirect('/signUp');
-	}
-	else {
-		dbo.collection("userinfo").find({ userid: curUsername }, function (err, member) {
-	  		if (err) return handleError(err);
-	  		
-	  		if(!member.length) {
-				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name, number: req.body.num, grade: 'member', isok: 'O', bookli: {}});
-				myMember.save(function (err, data) {
-					if (err) {
-						console.log("error");
-				    }
-                    res.redirect('/');
-				});
-	  		}
-	  		else {
-                res.redirect('/signUp');
-	  		}
-		});
-	}
+	var user = new Object();
+	user.userid = req.body.id;
+	user.pw = req.body.password;
+	user.name = req.body.name;
+	user.number = req.body.number;
+	user.isok = 'O';
+	user.grade = 'user';
+	user.bookli = {bookinfo:{bookname:[], leftdays:[]}}
+	dbo.collection("userinfo").find({userid: req.body.id}).toArray(function(err, member){
+		console.log(member)
+		if( !member.length )	 {
+			dbo.collection('userinfo').insert(user);
+			res.redirect('/')
+		} else{
+			res.redirect('/wrong2');
+		}
+	});
 });
 
 app.listen(8080, function(){
