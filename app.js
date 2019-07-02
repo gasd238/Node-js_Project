@@ -71,7 +71,7 @@ app.get('/wrong', function(req, res){
 })
 
 app.get('/wrong2', function(req, res){
-	res.render('wrongID')
+	res.render('wrong2')
 })
 
 app.get('/signUp', function (req, res, next) {
