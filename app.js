@@ -63,7 +63,7 @@ app.get('/myPage', function(req, res){
 });
 
 app.get('/admin', function(req, res){
-	res.render('admin', {islogin: req.session.login, grade: req.session.grade});
+	res.render('admin', {islogin: req.session.login, grade: req.session.grade, bookli: req.session.bookli});
 })
 
 app.get('/wrong', function(req, res){
