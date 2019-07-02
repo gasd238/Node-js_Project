@@ -42,24 +42,28 @@ app.use(express.static('views'));
 app.use(createSession());
 
 app.get('/', function(req, res){
-    res.render('mainPage', {islogin: req.session.login});
+    res.render('mainPage', {islogin: req.session.login, grade: req.session.grade});
 }); 
 
 app.get('/signIn', function(req, res){
-    res.render('signIn', {islogin: req.session.login, wrong:false});
+    res.render('signIn', {islogin: req.session.login, grade: req.session.grade});
 });
 
 app.get('/bannap', function(req, res){
-    res.render('bannap', {islogin: req.session.login});
+    res.render('bannap', {islogin: req.session.login, grade: req.session.grade});
 });
 
 app.get('/daechul', function(req, res){
-    res.render('daechul', {islogin: req.session.login});
+    res.render('daechul', {islogin: req.session.login, grade: req.session.grade});
 });
 
 app.get('/myPage', function(req, res){
-    res.render('myPage', {islogin: req.session.login});
+    res.render('myPage', {islogin: req.session.login, grade: req.session.grade});
 });
+
+app.get('/admin', function(req, res){
+	res.render('admin', {islogin: req.session.login, grade: req.session.grade});
+})
 
 app.get('/wrong', function(req, res){
 	res.render('wrong')
@@ -84,30 +88,28 @@ app.post('/signIn/check', function(req, res, next) {
 });
 
 app.get('/logOut', function(req, res){
-    req.session.login = 'logout';
+	req.session.login = 'logout';
+	req.session.grade = 'undefined'
     res.status(200);
     res.redirect('/');
 });
 
 app.post('/signUp/check',function(req, res) {
-    res.status(200);
 
 	var curUsername = req.body.id;
-	if(curUsername == "") {
+	if(curUsername == undefined) {
 		res.redirect('/signUp');
 	}
 	else {
 		user.find({ userid: curUsername }, function (err, member) {
 	  		if (err) return handleError(err);
 	  		
-	  		if(member == null) { // new username
-	  			// add myMember into the model
-				var myMember = new Member({ username: curUsername, password: req.password});
+	  		if(!member.length) {
+				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name});
 				myMember.save(function (err, data) {
 					if (err) {
 						console.log("error");
 				    }
-                    console.log('member is inserted');
                     res.redirect('/');
 				});
 	  		}
