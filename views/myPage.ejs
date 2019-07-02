@@ -59,16 +59,24 @@
     <br><br><br><h2>My Page</h2><br><hr>
     <br><br>
     <div class="media">
-  <img src="/profile.png" class="mr-3" alt="앙큼면상">
+  <% if(grade === 'member') { %>
+  <img src="/profile.jpg" class="mr-3" alt="회원(학생)">
+  <% 
+      } 
+   %>
+
+  <% if(grade === 'admin') { %>
+    <img src="/admin.png" class="mr-3" alt="관리자">
+    <% } %>
   <div class="media-body">
-    <h5 class="mt-0"><b>이름:</b> 정민아</h5>
+    <h5 class="mt-0"><b>이름:</b> <%= name  %></h5>
     <ul>
-      <li>광주소프트웨어마이스터고 - <b>n학년 n반 n번</b></li>
-      <li>대출 가능 여부 : <b>O</b><br></li>
+      <li>광주소프트웨어마이스터고 - <b><%= parseInt(num/1000) %>학년 <%= parseInt(num/100%10) %>반 <%= parseInt(num%100) %>번</b></li>
+      <li>대출 가능 여부 : <b><%=isok  %></b><br></li>
   </ul>
   </div>
 </div><br><br><br>
-
+<% if(grade === 'member') { %>
   <h2>현재 대출중인 도서 목록</h2>
   <ul class="list-group">
   <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -84,6 +92,7 @@
     <span class="badge badge-primary badge-pill">1</span>
   </li>
 </ul>
+<% } %>
 
 
 </main><!-- /.container -->

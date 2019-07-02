@@ -1,10 +1,10 @@
 var express = require('express')
-var engine = require('ejs')
 var url = require('url')
 var app = express()
 var logger = require('morgan')
 var user = require('./model/mongo');
 var session = require('express-session');
+var favicon = require('serve-favicon')
 
 app.use(logger('dev')); //로그를 남기는 미들웨어 실행
 app.use(express.static('public')); //정적파일 처리 미들웨어 실행
@@ -40,6 +40,7 @@ app.set('views', './views')
 app.set('view engine', 'ejs');
 app.use(express.static('views'));
 app.use(createSession());
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.get('/', function(req, res){
     res.render('mainPage', {islogin: req.session.login, grade: req.session.grade});
@@ -58,7 +59,7 @@ app.get('/daechul', function(req, res){
 });
 
 app.get('/myPage', function(req, res){
-    res.render('myPage', {islogin: req.session.login, grade: req.session.grade});
+    res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok});
 });
 
 app.get('/admin', function(req, res){
@@ -77,8 +78,10 @@ app.post('/signIn/check', function(req, res, next) {
 	dbo.collection("userinfo").find({userid: req.body.id, pw: req.body.password}).toArray(function(err, member) {
 		if( member.length )	 {
 			req.session.login = 'login';
-			req.session.username = req.body.id;
+			req.session.username = member[0].name;
 			req.session.grade = member[0].grade;
+			req.session.number = member[0].number;
+			req.session.isok = member[0].isok;
             res.status(200);
 		    res.redirect('/');
 		} else{
@@ -89,7 +92,9 @@ app.post('/signIn/check', function(req, res, next) {
 
 app.get('/logOut', function(req, res){
 	req.session.login = 'logout';
-	req.session.grade = 'undefined'
+	req.session.grade = 'undefined';
+	req.session.number = NaN;
+	req.session.isok = '?'
     res.status(200);
     res.redirect('/');
 });
@@ -101,11 +106,11 @@ app.post('/signUp/check',function(req, res) {
 		res.redirect('/signUp');
 	}
 	else {
-		user.find({ userid: curUsername }, function (err, member) {
+		dbo.collection("userinfo").find({ userid: curUsername }, function (err, member) {
 	  		if (err) return handleError(err);
 	  		
 	  		if(!member.length) {
-				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name});
+				var myMember = new Member({ userid: curUsername, pw: req.body.password, name: req.body.name, number: req.body.num, grade: 'member'});
 				myMember.save(function (err, data) {
 					if (err) {
 						console.log("error");
