@@ -51,10 +51,13 @@
   </head>
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-<h4 class="my-0 mr-md-auto font-weight-normal"><b>지온다락</b></h4>
+<img  class="my-0 mr-md-auto" src="GSM_.png" alt="지온다락" style="height: 40px;">
 <nav class="my-2 my-md-0 mr-md-3">
-  <a class="p-2 text-dark" href="main">MAIN</a>
+  <a class="p-2 text-dark" href="/">MAIN</a>
   <a class="p-2 text-dark" href="myPage">마이페이지</a>
+  <% if(grade == 'admin') { %>
+    <a class="p-2 text-dark" href="/admin">관리!</a>
+    <% } %>
 </nav>
 <% if(islogin == 'logout') { %>
   <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
@@ -73,34 +76,23 @@
 <br><br>
   <h3>반납 신청 목록</h3><br>
   <ul class="list-group">
-  <% for (var i = 0; i < 2; i++) { %>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <%= bookli.bookinfo.bookname[i]  %>
-    <span class="badge badge-primary badge-pill"> <%= bookli.bookinfo.day[i] %> </span>
+  <% for(var i = 0; i < bookli.length; i++) { %>
+  <li class="list-group-item d-flex justify-content-between align-items-center"> 
+    <%= bookli[i].bookcode %>
+    <span class="badge badge-primary badge-pill">afads</span>
   </li>
-<% } %>
+  <form action="./return_check" method="post">
+    <input type="hidden" name="code" value="<%= bookli[i].bookcode %>">
+    <input type="submit" value="확인">
+  </form>
+  <% } %>
 </ul>
 
 
 <br><br>
-<h3>사용자 목록 확인</h3><br>
+<h3><a class="p-2 text-dark" href="/admin_member">사용자 목록 확인</a></h3><br>
 <br><br>
-<div class="row">
-  <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">1학년</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">2학년</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">3학년</a>
-    </div>
-  </div>
-  <div class="col-8">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">2301 김김김<br>2344 ㅁㄴㅇ<br>2311 정민아</div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">2301 김김김<br>2344 ㅁㄴㅇ<br>2311 정민아</div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">2301 김김김<br>2344 ㅁㄴㅇ<br>2311 정민아</div>
-    </div>
-  </div>
-</div><br><br><br>
+
 
 
 

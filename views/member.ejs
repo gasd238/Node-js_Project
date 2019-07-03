@@ -1,3 +1,5 @@
+
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -12,27 +14,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <%
-    if (islogin != 'login') {
+    if (islogin != 'login' || grade != 'admin') {
       %>
       <script>
-      alert('로그인 후 이용하실 수 있습니다.');
+      alert('관리자만 이용할 수 있는 페이지 입니다');
       location.href="/";
       </script>
       <%
     }
     %>
-
-    <%
-    if (isok != 'O'){
-      %>
-      <script>
-        alert('대출 하실 수 없습니다.');
-        location.href="/";
-      </script>
-    <%
-    }
-    %>
- 
 
     <style>
       .bd-placeholder-img {
@@ -50,46 +40,56 @@
         }
       }
     </style>
+    <!-- Custom styles for this template -->
   </head>
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-<img  class="my-0 mr-md-auto" src="GSM_.png" alt="지온다락" style="height: 40px;">
-<nav class="my-2 my-md-0 mr-md-3">
-  <a class="p-2 text-dark" href="/">MAIN</a>
-  <% if(grade != 'admin') { %>
+<img  class="my-0 mr-md-auto" src="/GSM_.png" alt="지온다락" style="height: 40px;">
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a class="p-2 text-dark" href="/">MAIN</a>
+    <% if(grade != 'admin') { %>
     <a class="p-2 text-dark" href="daechul">대출</a>
       <a class="p-2 text-dark" href="bannap">반납</a>
       <% } %>
-  <a class="p-2 text-dark" href="myPage">마이페이지</a>
-  <% if(grade == 'admin') { %>
-    <a class="p-2 text-dark" href="admin">관리!</a>
+    <a class="p-2 text-dark" href="myPage">마이페이지</a>
+    <% if(grade == 'admin') { %>
+      <a class="p-2 text-dark" href="/admin">관리!</a>
+      <% } %>
+  </nav>
+  <% if(islogin == 'logout') { %>
+    <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
     <% } %>
-</nav>
-<% if(islogin == 'logout') { %>
-  <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
-  <% } %>
-  <% if(islogin == 'login') { %>
-    <a class="btn btn-outline-primary" href="/logOut">Log Out</a>
-  <% } %>
+    <% if(islogin == 'login') { %>
+      <a class="btn btn-outline-primary" href="/logOut">Log Out</a>
+    <% } %>
 </div>
-
 <main role="main" class="container">
 
-  <div class="starter-template">
-    <br><br><br>
-    <h2>대출을 원하시는 책의 코드를 입력하세요</h2>
-    <br><hr><br>
-    <div class="form-group">
-      <form method="POST", action="./add">
-        <label>Book Code</label>
-        <input type="id" id="code" class="form-control" name="code" placeholder="코드 입력" autofocus>
-        <small class="form-text text-muted">코드는 표지 혹은 속표지에 주로 위치해있습니다.</small>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+    <div class="starter-template"><br><br>
+      <h2>관리자 페이지</h2>
+      <br><hr><br>
     </div>
-</div>
-
-</main><!-- /.container -->
+  <br><br>
+    <h3>멤버 목록</h3><br>
+    <ul class="list-group">
+    <% for(var i = 0;i < member.length; i++) { %>
+        <% if(member[i].name === '관리자') continue; %>
+    <li class="list-group-item d-flex align-items-center">
+        <form action="./member_mod", method="POST">
+            <input type="text" name="name" readonly value="<%= member[i].name %>">
+            <input type="text" name="number" readonly value="<%= member[i].number %>">
+            <input type="text" name="isok" value="<%= member[i].isok %>">
+            <input type="submit" value="수정">
+        </form>
+        <form action="./page" method="POST" style="margin-left: 5px">
+            <input type="hidden", value="<%= member[i].name %>" name="name">
+            <input type="submit" value="보기">
+        </form>
+    </li>
+    <% } %>
+    
+  </ul>  
+</main>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
       <script>window.jQuery || document.write('<script src="/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script><script src="/bootstrap-4.3.1-dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script></body>
 </html>

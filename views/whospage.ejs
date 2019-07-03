@@ -1,3 +1,5 @@
+
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -22,18 +24,6 @@
     }
     %>
 
-    <%
-    if (isok != 'O'){
-      %>
-      <script>
-        alert('대출 하실 수 없습니다.');
-        location.href="/";
-      </script>
-    <%
-    }
-    %>
- 
-
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -50,10 +40,11 @@
         }
       }
     </style>
+    <!-- Custom styles for this template -->
   </head>
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-<img  class="my-0 mr-md-auto" src="GSM_.png" alt="지온다락" style="height: 40px;">
+      <img  class="my-0 mr-md-auto" src="GSM_.png" alt="지온다락" style="height: 40px;">
 <nav class="my-2 my-md-0 mr-md-3">
   <a class="p-2 text-dark" href="/">MAIN</a>
   <% if(grade != 'admin') { %>
@@ -62,7 +53,7 @@
       <% } %>
   <a class="p-2 text-dark" href="myPage">마이페이지</a>
   <% if(grade == 'admin') { %>
-    <a class="p-2 text-dark" href="admin">관리!</a>
+    <a class="p-2 text-dark" href="/admin">관리!</a>
     <% } %>
 </nav>
 <% if(islogin == 'logout') { %>
@@ -76,18 +67,43 @@
 <main role="main" class="container">
 
   <div class="starter-template">
-    <br><br><br>
-    <h2>대출을 원하시는 책의 코드를 입력하세요</h2>
-    <br><hr><br>
-    <div class="form-group">
-      <form method="POST", action="./add">
-        <label>Book Code</label>
-        <input type="id" id="code" class="form-control" name="code" placeholder="코드 입력" autofocus>
-        <small class="form-text text-muted">코드는 표지 혹은 속표지에 주로 위치해있습니다.</small>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-</div>
+    <br><br><br><h2><%= name %>`s Page</h2><br><hr>
+    <br><br>
+    <div class="media">
+  <img src="/profile.jpg" class="mr-3" alt="회원(학생)">
+  <div class="media-body">
+    <h5 class="mt-0"><b>이름:</b> <%= name  %></h5>
+    <ul>
+      <li>광주소프트웨어마이스터고 - <b><%= parseInt(num/1000) %>학년 <%= parseInt(num/100%10) %>반 <%= parseInt(num%100) %>번</b></li>
+      <li>대출 가능 여부 : <b><%=isok  %></b><br></li>
+  </ul>
+  </div>
+</div><br><br><br>
+<% if(grade === 'user') { %>
+  <h2>현재 대출중인 도서 목록</h2>
+  <ul class="list-group">
+  <% for(var i = 0; i < bookli.length; i++) { %>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <%= bookli[i].bookcode %>
+    <span class="badge badge-primary badge-pill">
+      <script>
+          var date = new Date();
+          var tdate = new Date(String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay()))
+          var afadsf = new Date("<%= bookli[i].landdate %>")
+          var diff = tdate.getTime() - afadsf.getTime();
+          var ldate = diff/(1000*60*60*24);
+          if(ldate > 14){
+            document.write("반납 기한 지남")
+          } else{
+            document.write(ldate);
+          }
+        </script>
+    </span>
+  </li>
+  <% } %>
+  </ul>
+<% } %>
+
 
 </main><!-- /.container -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

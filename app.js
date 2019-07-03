@@ -57,7 +57,7 @@ app.get('/bannap', function(req, res){
 });
 
 app.get('/daechul', function(req, res){
-	res.render('daechul', {islogin: req.session.login, grade: req.session.grade});
+	res.render('daechul', {islogin: req.session.login, grade: req.session.grade, isok: req.session.isok});
 });
 
 app.get('/myPage', function(req, res){
@@ -72,8 +72,10 @@ app.get('/myPage', function(req, res){
 });
 
 app.get('/admin', function(req, res){
-	res.render('admin', {islogin: req.session.login, grade: req.session.grade});
-})
+	dbo.collection("returnedbooks").find({}).toArray(function(err, books){
+		res.render('admin', {islogin: req.session.login, grade: req.session.grade, bookli: books});
+	});
+});
 
 app.get('/wrong', function(req, res){
 	res.render('wrong')
@@ -83,11 +85,17 @@ app.get('/wrong2', function(req, res){
 	res.render('wrong2')
 })
 
-app.get('/signUp', function (req, res, next) {
+app.get('/signUp', function (req, res) {
 	res.render('signUp');
 });
 
-app.post('/signIn/check', function(req, res, next) { 
+app.get('/admin_member', function(req, res){
+	dbo.collection("userinfo").find({}).toArray(function(err, member){
+		res.render('member', {islogin: req.session.login, grade: req.session.grade, member: member});
+	});
+});
+
+app.post('/signIn/check', function(req, res) { 
 	dbo.collection("userinfo").find({userid: req.body.id, pw: req.body.password}).toArray(function(err, member) {
 		if( member.length )	 {
 			req.session.userid = member[0].userid;
@@ -140,6 +148,35 @@ app.post('/add', function(req, res){
 	dbo.collection("landedbooks").insertOne(book);
 	res.render('addsuccess')
 });
+
+app.post('/member_mod', function(req, res){
+	dbo.collection("userinfo").find({name: req.body.name}).toArray(function(err, member){
+		member[0].isok = (req.body.isok).toUpperCase();
+		dbo.collection("userinfo").update({name: req.body.name}, {userid: member[0].userid, pw: member[0].pw, name: member[0].name, grade: member[0].grade, number: member[0].number, isok: member[0].isok});
+		res.redirect('/')
+	});
+});
+
+app.post('/page', function(req,res){
+	dbo.collection("userinfo").find({name: req.body.name}).toArray(function(err, member){
+		dbo.collection("landedbooks").find({landuser: member[0].userid}).toArray(function(err, books){
+			res.render('whospage', {islogin: req.session.login, grade: member[0].grade, name: member[0].name, num: member[0].number, isok: member[0].isok, bookli: books});
+		});
+	});
+});
+
+app.post('/return', function(req, res){
+	var date = new Date();
+	var returndate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay());
+	dbo.collection("returnedbooks").insertOne({bookcode: req.body.code, landuser: req.session.userid, returndate : returndate});
+	dbo.collection("landedbooks").remove({bookcode: req.body.code, landuser: req.session.userid});
+	res.render('returnsuccess')
+});
+
+app.post('/return_check', function(req, res){
+	dbo.collection("returnedbooks").remove({bookcode: req.body.code});
+	res.render('returnchecksuccess')
+})
 
 app.listen(8080, function(){
     console.log('8080포트 머기중')
