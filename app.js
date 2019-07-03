@@ -42,6 +42,8 @@ app.use(express.static('views'));
 app.use(createSession());
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
+
+
 app.get('/', function(req, res){
     res.render('mainPage', {islogin: req.session.login, grade: req.session.grade});
 }); 
@@ -55,15 +57,22 @@ app.get('/bannap', function(req, res){
 });
 
 app.get('/daechul', function(req, res){
-    res.render('daechul', {islogin: req.session.login, grade: req.session.grade});
+	res.render('daechul', {islogin: req.session.login, grade: req.session.grade});
 });
 
 app.get('/myPage', function(req, res){
-    res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: req.session.bookli});
+	dbo.collection("landedbooks").find({landuser: req.session.userid}).toArray(function(err, member){
+		if(member.length){
+			req.session.bookli = member;
+		}else{
+			req.session.bookli = [];
+		}
+		res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: req.session.bookli});
+	});
 });
 
 app.get('/admin', function(req, res){
-	res.render('admin', {islogin: req.session.login, grade: req.session.grade, bookli: req.session.bookli});
+	res.render('admin', {islogin: req.session.login, grade: req.session.grade});
 })
 
 app.get('/wrong', function(req, res){
@@ -81,12 +90,12 @@ app.get('/signUp', function (req, res, next) {
 app.post('/signIn/check', function(req, res, next) { 
 	dbo.collection("userinfo").find({userid: req.body.id, pw: req.body.password}).toArray(function(err, member) {
 		if( member.length )	 {
+			req.session.userid = member[0].userid;
 			req.session.login = 'login';
 			req.session.username = member[0].name;
 			req.session.grade = member[0].grade;
 			req.session.number = member[0].number;
 			req.session.isok = member[0].isok;
-			req.session.bookli = member[0].bookli;
             res.status(200);
 		    res.redirect('/');
 		} else{
@@ -96,11 +105,12 @@ app.post('/signIn/check', function(req, res, next) {
 });
 
 app.get('/logOut', function(req, res){
+	req.session.userid = "undefined"
 	req.session.login = 'logout';
 	req.session.grade = 'undefined';
 	req.session.number = NaN;
 	req.session.isok = '?'
-	req.session.bookli = {}
+	req.session.bookli = []
     res.status(200);
     res.redirect('/');
 });
@@ -113,9 +123,7 @@ app.post('/signUp/check',function(req, res) {
 	user.number = req.body.number;
 	user.isok = 'O';
 	user.grade = 'user';
-	user.bookli = {bookinfo:{bookname:[], leftdays:[]}}
 	dbo.collection("userinfo").find({userid: req.body.id}).toArray(function(err, member){
-		console.log(member)
 		if( !member.length )	 {
 			dbo.collection('userinfo').insert(user);
 			res.redirect('/')
@@ -123,6 +131,14 @@ app.post('/signUp/check',function(req, res) {
 			res.redirect('/wrong2');
 		}
 	});
+});
+
+app.post('/add', function(req, res){
+	var date = new Date();
+	var landdate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay());
+	var book = {bookcode : req.body.code, landdate: landdate, landuser: req.session.userid};
+	dbo.collection("landedbooks").insertOne(book);
+	res.render('addsuccess')
 });
 
 app.listen(8080, function(){

@@ -13,7 +13,16 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+    <%
+    if (islogin != 'login') {
+      %>
+      <script>
+      alert('로그인 후 이용하실 수 있습니다.');
+      location.href="/";
+      </script>
+      <%
+    }
+    %>
 
     <style>
       .bd-placeholder-img {
@@ -38,8 +47,10 @@
 <h4 class="my-0 mr-md-auto font-weight-normal"><b>지온다락</b></h4>
 <nav class="my-2 my-md-0 mr-md-3">
   <a class="p-2 text-dark" href="/">MAIN</a>
-  <a class="p-2 text-dark" href="daechul">대출</a>
-    <a class="p-2 text-dark" href="bannap">반납</a>
+  <% if(grade != 'admin') { %>
+    <a class="p-2 text-dark" href="daechul">대출</a>
+      <a class="p-2 text-dark" href="bannap">반납</a>
+      <% } %>
   <a class="p-2 text-dark" href="myPage">마이페이지</a>
   <% if(grade == 'admin') { %>
     <a class="p-2 text-dark" href="/admin">관리!</a>
@@ -79,13 +90,26 @@
 <% if(grade === 'user') { %>
   <h2>현재 대출중인 도서 목록</h2>
   <ul class="list-group">
-  <% for (var i = 0; i < 2; i++) { %>
+  <% for(var i = 0; i < bookli.length; i++) { %>
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    <%=bookli.bookinfo.bookname[i]  %>
-    <span class="badge badge-primary badge-pill"><%=bookli.bookinfo.leftdays[i] %></span>
+    <%= bookli[i].bookcode %>
+    <span class="badge badge-primary badge-pill">
+      <script>
+          var date = new Date();
+          var tdate = new Date(String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay()))
+          var afadsf = new Date("<%= bookli[i].landdate %>")
+          var diff = tdate.getTime() - afadsf.getTime();
+          var ldate = diff/(1000*60*60*24);
+          if(ldate > 14){
+            document.write("반납 기한 지남")
+          } else{
+            document.write(ldate);
+          }
+        </script>
+    </span>
   </li>
   <% } %>
-</ul>
+  </ul>
 <% } %>
 
 

@@ -38,8 +38,10 @@
 <h4 class="my-0 mr-md-auto font-weight-normal"><b>지온다락</b></h4>
   <nav class="my-2 my-md-0 mr-md-3">
     <a class="p-2 text-dark" href="/">MAIN</a>
+    <% if(grade != 'admin') { %>
     <a class="p-2 text-dark" href="daechul">대출</a>
       <a class="p-2 text-dark" href="bannap">반납</a>
+      <% } %>
     <a class="p-2 text-dark" href="myPage">마이페이지</a>
     <% if(grade == 'admin') { %>
       <a class="p-2 text-dark" href="/admin">관리!</a>
@@ -84,7 +86,7 @@
     <span class="sr-only">Next</span>
   </a>
 </div><br><br><br>
-    <center><h1>이 곳을 누르면 <a href="http://book.gen.go.kr/r/reading/search/schoolSearchForm.jsp">GSM 도서 검색 창</a>으로 이동합니다.</h1></center>
+    <center><h1>이 곳을 누르면 <a href="http://book.gen.go.kr/r/reading/search/schoolCodeSetting.jsp?schoolCode=2353&returnUrl=">GSM 도서 검색 창</a>으로 이동합니다.</h1></center>
   </div><br><br><br>
 
 </main><!-- /.container -->
