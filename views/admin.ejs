@@ -76,17 +76,25 @@
 <br><br>
   <h3>반납 신청 목록</h3><br>
   <ul class="list-group">
-  <% for(var i = 0; i < bookli.length; i++) { %>
+  <% for(var i = 0; i < rbookli.length; i++) { %>
   <li class="list-group-item d-flex justify-content-between align-items-center"> 
     <%= bookli[i].bookcode %>
-    <span class="badge badge-primary badge-pill">afads</span>
+    <span class="badge badge-primary badge-pill"><script>
+        var tdate = new Date("<%= rbookli[i].returndate %>")
+        var afadsf = new Date("<%= bookli[i].landdate %>")
+        var diff = tdate.getTime() - afadsf.getTime();
+        var ldate = diff/(1000*60*60*24);
+        document.write(14 - ldate);
+      </script>
+      </span>
   </li>
   <form action="./return_check" method="post">
-    <input type="hidden" name="code" value="<%= bookli[i].bookcode %>">
+    <input type="hidden" name="code" value="<%= rbookli[i].bookcode %>">
     <input type="submit" value="확인">
   </form>
   <% } %>
 </ul>
+<small>-로 표기 되면 반납 기간 넘겼음</small>
 
 
 <br><br>

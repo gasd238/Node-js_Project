@@ -2,7 +2,6 @@ var express = require('express')
 var url = require('url')
 var app = express()
 var logger = require('morgan')
-var userinfo = require('./model/mongo');
 var session = require('express-session');
 var favicon = require('serve-favicon')
 
@@ -72,8 +71,10 @@ app.get('/myPage', function(req, res){
 });
 
 app.get('/admin', function(req, res){
-	dbo.collection("returnedbooks").find({}).toArray(function(err, books){
-		res.render('admin', {islogin: req.session.login, grade: req.session.grade, bookli: books});
+	dbo.collection("returnedbooks").find({}).toArray(function(err, rbooks){
+		dbo.collection("landedbooks").find({}).toArray(function(err, books){
+			res.render('admin', {islogin: req.session.login, grade: req.session.grade, rbookli: rbooks, bookli: books});
+		})
 	});
 });
 
@@ -153,7 +154,7 @@ app.post('/member_mod', function(req, res){
 	dbo.collection("userinfo").find({name: req.body.name}).toArray(function(err, member){
 		member[0].isok = (req.body.isok).toUpperCase();
 		dbo.collection("userinfo").update({name: req.body.name}, {userid: member[0].userid, pw: member[0].pw, name: member[0].name, grade: member[0].grade, number: member[0].number, isok: member[0].isok});
-		res.redirect('/')
+		res.redirect('/admin_member')
 	});
 });
 
