@@ -129,13 +129,13 @@ app.post('/signUp/check',function(req, res) {
 	user.userid = req.body.id;
 	user.pw = req.body.password;
 	user.name = req.body.name;
+	user.grade = 'user';
 	user.number = req.body.number;
 	user.isok = 'O';
-	user.grade = 'user';
 	dbo.collection("userinfo").find({userid: req.body.id}).toArray(function(err, member){
 		if( !member.length )	 {
 			dbo.collection('userinfo').insert(user);
-			res.redirect('/')
+			res.render('success')
 		} else{
 			res.redirect('/wrong2');
 		}
@@ -152,9 +152,14 @@ app.post('/add', function(req, res){
 
 app.post('/member_mod', function(req, res){
 	dbo.collection("userinfo").find({name: req.body.name}).toArray(function(err, member){
-		member[0].isok = (req.body.isok).toUpperCase();
-		dbo.collection("userinfo").update({name: req.body.name}, {userid: member[0].userid, pw: member[0].pw, name: member[0].name, grade: member[0].grade, number: member[0].number, isok: member[0].isok});
-		res.redirect('/admin_member')
+		req.body.isok = (req.body.isok).toUpperCase();
+		if(req.body.isok === 'O' || req.body.isok === 'X'){
+			member[0].isok = req.body.isok;
+			dbo.collection("userinfo").update({name: req.body.name}, {userid: member[0].userid, pw: member[0].pw, name: member[0].name, grade: member[0].grade, number: member[0].number, isok: member[0].isok});
+			res.redirect('/admin_member')
+		} else{
+			res.render('noother')
+		}
 	});
 });
 

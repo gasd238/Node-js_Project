@@ -76,9 +76,9 @@
         <% if(member[i].name === '관리자') continue; %>
     <li class="list-group-item d-flex align-items-center">
         <form action="./member_mod", method="POST">
-            <input type="text" name="name" readonly value="<%= member[i].name %>">
-            <input type="text" name="number" readonly value="<%= member[i].number %>">
-            <input type="text" name="isok" value="<%= member[i].isok %>">
+            이름 : <input type="text" name="name" readonly value="<%= member[i].name %>">
+            번호 : <input type="text" name="number" readonly value="<%= member[i].number %>">
+            대출 가능 여부 : <input type="text" name="isok" value="<%= member[i].isok %>">
             <input type="submit" value="수정">
         </form>
         <form action="./page" method="POST" style="margin-left: 5px">
