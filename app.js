@@ -3,7 +3,6 @@ var url = require('url')
 var app = express()
 var logger = require('morgan')
 var session = require('express-session');
-var favicon = require('serve-favicon')
 
 app.use(logger('dev')); //로그를 남기는 미들웨어 실행
 app.use(express.static('public')); //정적파일 처리 미들웨어 실행
@@ -39,7 +38,6 @@ app.set('views', './views')
 app.set('view engine', 'ejs');
 app.use(express.static('views'));
 app.use(createSession());
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 
 
@@ -166,7 +164,7 @@ app.post('/member_mod', function(req, res){
 app.post('/page', function(req,res){
 	dbo.collection("userinfo").find({name: req.body.name}).toArray(function(err, member){
 		dbo.collection("landedbooks").find({landuser: member[0].userid}).toArray(function(err, books){
-			res.render('whospage', {islogin: req.session.login, grade: member[0].grade, name: member[0].name, num: member[0].number, isok: member[0].isok, bookli: books});
+			res.render('whospage', {islogin: req.session.login, grade: req.session.grade, name: member[0].name, num: member[0].number, isok: member[0].isok, bookli: books});
 		});
 	});
 });
