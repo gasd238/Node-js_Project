@@ -3,11 +3,12 @@ var url = require('url')
 var app = express()
 var logger = require('morgan')
 var session = require('express-session');
+var favicon = require("serve-favicon");
+var path = require("path");
 
 app.use(logger('dev')); //로그를 남기는 미들웨어 실행
 app.use(express.static('public')); //정적파일 처리 미들웨어 실행
 app.use(express.urlencoded({extended:true})); //body로 넘어온 데이터 파싱
-
 
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
@@ -33,12 +34,12 @@ app.use(session({
 	saveUninitialized: true
    }));
 
-//pug 엔진 세팅
+//ejs 엔진 세팅
 app.set('views', './views')
 app.set('view engine', 'ejs');
 app.use(express.static('views'));
 app.use(createSession());
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 
 app.get('/', function(req, res){
