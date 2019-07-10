@@ -112,7 +112,6 @@ app.get('/logOut', function(req, res){
 	req.session.grade = 'undefined';
 	req.session.number = NaN;
 	req.session.isok = '?'
-	req.session.bookli = []
     res.status(200);
     res.redirect('/');
 });
