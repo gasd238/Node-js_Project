@@ -60,20 +60,13 @@ app.get('/daechul', function(req, res){
 
 app.get('/myPage', function(req, res){
 	dbo.collection("landedbooks").find({landuser: req.session.userid}).toArray(function(err, member){
-		if(member.length){
-			req.session.bookli = member;
-		}else{
-			req.session.bookli = [];
-		}
-		res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: req.session.bookli});
+		res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: member});
 	});
 });
 
 app.get('/admin', function(req, res){
 	dbo.collection("returnedbooks").find({}).toArray(function(err, rbooks){
-		dbo.collection("landedbooks").find({}).toArray(function(err, books){
-			res.render('admin', {islogin: req.session.login, grade: req.session.grade, rbookli: rbooks, bookli: books});
-		})
+		res.render('admin', {islogin: req.session.login, grade: req.session.grade, rbookli: rbooks});
 	});
 });
 
@@ -114,6 +107,7 @@ app.post('/signIn/check', function(req, res) {
 
 app.get('/logOut', function(req, res){
 	req.session.userid = "undefined"
+	req.session.username = 'undefined'
 	req.session.login = 'logout';
 	req.session.grade = 'undefined';
 	req.session.number = NaN;
@@ -143,10 +137,17 @@ app.post('/signUp/check',function(req, res) {
 
 app.post('/add', function(req, res){
 	var date = new Date();
-	var landdate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay());
-	var book = {bookcode : req.body.code, landdate: landdate, landuser: req.session.userid};
-	dbo.collection("landedbooks").insertOne(book);
-	res.render('addsuccess')
+	var landdate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDate());
+	dbo.collection("landedbooks").find({bookcode : req.body.code}).toArray((err, books)=>{
+		if(!books.length){
+			var book = {bookcode : req.body.code, landdate: landdate, landuser: req.session.username};
+			dbo.collection("landedbooks").insertOne(book);
+			res.render('addsuccess', {ok:'yes'});
+		} 
+		else{
+			res.render('addsuccess', {ok:'no'});
+		}
+	})
 });
 
 app.post('/member_mod', function(req, res){
@@ -172,10 +173,17 @@ app.post('/page', function(req,res){
 
 app.post('/return', function(req, res){
 	var date = new Date();
-	var returndate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay());
-	dbo.collection("returnedbooks").insertOne({bookcode: req.body.code, landuser: req.session.userid, returndate : returndate});
-	dbo.collection("landedbooks").remove({bookcode: req.body.code, landuser: req.session.userid});
-	res.render('returnsuccess')
+	var returndate = String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDate());
+	dbo.collection("landedbooks").find({bookcode: req.body.code, landuser: req.session.username}).toArray(function(err, member){
+		if( member.length ){
+			dbo.collection("returnedbooks").insertOne({bookcode: req.body.code, landuser: req.session.username, returndate : returndate, landdate: member[0].landdate});
+			dbo.collection("landedbooks").remove({bookcode: req.body.code, landuser: req.session.username});
+			res.render('returnsuccess', {ok : 'yes'})
+		}
+		else{
+			res.render('returnsuccess', {ok : 'no'})
+		}
+	})
 });
 
 app.post('/return_check', function(req, res){

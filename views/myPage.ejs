@@ -96,7 +96,7 @@
     <span class="badge badge-primary badge-pill">
       <script>
           var date = new Date();
-          var tdate = new Date(String(date.getFullYear()) + '/' + String(date.getMonth() + 1) + '/' + String(date.getDay()))
+          var tdate = new Date(String(date.getFullYear()) + '/' + String(date.getMonth()+1) + '/' + String(date.getDate()))
           var afadsf = new Date("<%= bookli[i].landdate %>")
           var diff = tdate.getTime() - afadsf.getTime();
           var ldate = diff/(1000*60*60*24);

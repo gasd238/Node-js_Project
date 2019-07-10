@@ -5,9 +5,17 @@
     <title>Document</title>
 </head>
 <body>
+    <%if(ok == 'yes') {%>
     <script>
         alert('반납에 성공하였습니다!');
         location.href="bannap";
-        </script>
+    </script>
+    <%}%>
+    <%if(ok == 'no') {%>
+    <script>
+        alert('없는 책은 반납하실 수 없습니다.');
+        location.href="bannap";
+    </script>
+    <%}%>
 </body>
 </html>

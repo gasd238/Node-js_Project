@@ -5,9 +5,17 @@
     <title>Document</title>
 </head>
 <body>
+     <%if(ok == 'yes') {%>
     <script>
-        alert('대출이 완료되었습니다!');
+        alert('대출에 성공하였습니다!');
         location.href="daechul";
-        </script>
+    </script>
+    <%}%>
+    <%if(ok == 'no') {%>
+    <script>
+        alert('이미 대출된 책입니다.');
+        location.href="daechul";
+    </script>
+    <%}%>
 </body>
 </html>
