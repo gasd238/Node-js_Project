@@ -59,7 +59,8 @@ app.get('/daechul', function(req, res){
 });
 
 app.get('/myPage', function(req, res){
-	dbo.collection("landedbooks").find({landuser: req.session.userid}).toArray(function(err, member){
+	dbo.collection("landedbooks").find({landuser: req.session.username}).toArray(function(err, member){
+		console.log(member)
 		res.render('myPage', {islogin: req.session.login, grade: req.session.grade, name: req.session.username, num: req.session.number, isok: req.session.isok, bookli: member});
 	});
 });
