@@ -18,7 +18,7 @@
   "homepage": "https://github.com/gasd238/Node-js_Project#readme",
   "dependencies": {
     "ejs": "^2.6.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.16.2",
     "mongoose": "^5.6.2",
     "morgan": "^1.9.1",
